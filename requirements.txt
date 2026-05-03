@@ -31,6 +31,3 @@ lime>=0.2.0.1
 
 # Misc
 gitpython>=3.1
-
-# Presentations (slide deck generator: scripts/build_presentation.py)
-python-pptx>=1.0
