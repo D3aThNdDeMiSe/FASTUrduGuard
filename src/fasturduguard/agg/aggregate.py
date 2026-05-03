@@ -17,11 +17,27 @@ from sklearn.metrics import (
 
 from fasturduguard.agg.ensemble import weighted_softmax, weighted_vote
 from fasturduguard.agg import plots
+from fasturduguard.preprocess.pipeline import preprocess_iter
 from fasturduguard.utils import (
     data_dir, load_yaml, results_dir, setup_logging,
 )
 
 log = logging.getLogger("fug.agg")
+
+
+def _resolve_checkpoint(row: pd.Series, results_root: Path) -> Path | None:
+    """Prefer stored path; fallback to results_root/rank_*/checkpoints/<model> (portable across PCs)."""
+    primary = Path(str(row.get("checkpoint_dir", "")))
+    if primary.is_dir():
+        return primary
+    rk, name = row.get("rank"), row.get("model")
+    if rk is None or pd.isna(rk) or not name:
+        return None
+    cand = results_root / f"rank_{int(rk)}" / "checkpoints" / str(name)
+    if cand.is_dir():
+        log.info("Checkpoint path fallback for %s: %s", name, cand)
+        return cand
+    return None
 
 
 def collect_metrics(rank_dirs: list[Path]) -> pd.DataFrame:
@@ -90,6 +106,8 @@ def main() -> None:
     p.add_argument("--label_col", default="label_4")
     p.add_argument("--no_predict", action="store_true",
                    help="Skip ensemble prediction (just produce leaderboard).")
+    p.add_argument("--preprocess_workers", type=int, default=4,
+                   help="Process pool size for test-text preprocessing (matches training pipeline).")
     args = p.parse_args()
 
     cfg = load_yaml("models.yaml")
@@ -140,15 +158,22 @@ def main() -> None:
     df = pd.read_parquet(args.unified)
     test = df[df["split"] == "test"].reset_index(drop=True)
     log.info("Ensemble eval over %d test rows", len(test))
+    log.info("Applying training-time preprocessing to test texts (--preprocess_workers=%d)", args.preprocess_workers)
+    proc_texts = preprocess_iter(test["text"].astype(str).tolist(), n_workers=args.preprocess_workers)
 
     probs_list, weights_list, names_used = [], [], []
     for _, row in leaderboard.iterrows():
-        ckpt = Path(str(row["checkpoint_dir"]))
-        if not ckpt.exists():
-            log.warning("Skip %s: checkpoint missing %s", row["model"], ckpt)
+        ckpt = _resolve_checkpoint(row, args.results_root)
+        if ckpt is None:
+            stored = row.get("checkpoint_dir", "")
+            fallback = args.results_root / f"rank_{int(row['rank'])}" / "checkpoints" / str(row["model"])
+            log.warning(
+                "Skip %s: no checkpoint at %s (copy Node-2 folder here or run aggregate there): %s",
+                row["model"], stored, fallback,
+            )
             continue
         try:
-            probs = predict_probabilities(by_name[row["model"]], ckpt, test["text"].tolist())
+            probs = predict_probabilities(by_name[row["model"]], ckpt, proc_texts)
         except Exception as e:
             log.warning("Skip %s: predict failed (%s)", row["model"], e)
             continue
