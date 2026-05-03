@@ -1,11 +1,19 @@
 {
-  "start": 1777809584.9215357,
+  "start": 1777816265.716426,
   "models": {
+    "deberta-v3-base": {
+      "elapsed_s": 4278.732387399999,
+      "device_used": "cuda"
+    },
+    "mbert": {
+      "elapsed_s": 3056.3825689000078,
+      "device_used": "cuda"
+    },
     "distilbert-multi": {
-      "elapsed_s": 2316.952591099951,
-      "device_used": "cpu"
+      "elapsed_s": 1721.3047839000355,
+      "device_used": "cuda"
     }
   },
-  "end": 1777811901.883374,
-  "wall_s": 2316.961838245392
+  "end": 1777825322.1367297,
+  "wall_s": 9056.420303821564
 }

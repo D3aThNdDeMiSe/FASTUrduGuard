@@ -1,9 +1,23 @@
 [
   {
+    "model": "deberta-v3-base",
+    "macro_f1": 0.4474799350172311,
+    "accuracy": 0.8833884562039902,
+    "training_runtime_s": 4090.9122184000444,
+    "peak_vram_mb": 4437
+  },
+  {
+    "model": "mbert",
+    "macro_f1": 0.4556922250586482,
+    "accuracy": 0.8993918702656567,
+    "training_runtime_s": 2927.574875799939,
+    "peak_vram_mb": 3105
+  },
+  {
     "model": "distilbert-multi",
-    "macro_f1": 0.3516691039341272,
-    "accuracy": 0.70009602048437,
-    "training_runtime_s": 686.0753821999533,
-    "peak_vram_mb": 0
+    "macro_f1": 0.4461726820546607,
+    "accuracy": 0.8807212205270458,
+    "training_runtime_s": 1600.1509393999586,
+    "peak_vram_mb": 1961
   }
 ]

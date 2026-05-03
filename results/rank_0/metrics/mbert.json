@@ -1,0 +1,133 @@
+{
+  "model": "mbert",
+  "hf_id": "bert-base-multilingual-cased",
+  "rank": 0,
+  "placement": "gpu",
+  "device_used": "cuda",
+  "rows_train": 74976,
+  "rows_val": 9372,
+  "rows_test": 9373,
+  "val": {
+    "eval_loss": 0.3441271185874939,
+    "eval_accuracy": 0.8892445582586428,
+    "eval_macro_precision": 0.4440592052692197,
+    "eval_macro_recall": 0.4574957079994283,
+    "eval_macro_f1": 0.4505797610376122,
+    "eval_weighted_f1": 0.8767413536061756,
+    "eval_runtime": 18.0426,
+    "eval_samples_per_second": 519.437,
+    "eval_steps_per_second": 16.239,
+    "epoch": 3.0
+  },
+  "test": {
+    "eval_loss": 0.3283597230911255,
+    "eval_accuracy": 0.8993918702656567,
+    "eval_macro_precision": 0.4490929509786956,
+    "eval_macro_recall": 0.46263736021397184,
+    "eval_macro_f1": 0.4556922250586482,
+    "eval_weighted_f1": 0.886719602476546,
+    "eval_runtime": 17.9319,
+    "eval_samples_per_second": 522.7,
+    "eval_steps_per_second": 16.34,
+    "epoch": 3.0
+  },
+  "training_runtime_s": 2927.574875799939,
+  "samples_per_sec": 76.865,
+  "peak_vram_mb": 3105,
+  "cpu_before": {
+    "cpu_pct": 8.8,
+    "ram_used_mb": 12713,
+    "ram_total_mb": 15676,
+    "n_cpus": 16
+  },
+  "cpu_after": {
+    "cpu_pct": 10.4,
+    "ram_used_mb": 14581,
+    "ram_total_mb": 15676,
+    "n_cpus": 16
+  },
+  "gpu_before": {
+    "available": true,
+    "name": "NVIDIA GeForce RTX 5060 Laptop GPU",
+    "total_mb": 8151,
+    "used_mb": 5579,
+    "free_mb": 2571,
+    "gpu_util_pct": 5,
+    "mem_util_pct": 1
+  },
+  "gpu_after": {
+    "available": true,
+    "name": "NVIDIA GeForce RTX 5060 Laptop GPU",
+    "total_mb": 8151,
+    "used_mb": 4026,
+    "free_mb": 4124,
+    "gpu_util_pct": 8,
+    "mem_util_pct": 1
+  },
+  "confusion_matrix": [
+    [
+      4535,
+      353,
+      0,
+      0
+    ],
+    [
+      326,
+      3895,
+      0,
+      0
+    ],
+    [
+      4,
+      148,
+      0,
+      0
+    ],
+    [
+      47,
+      65,
+      0,
+      0
+    ]
+  ],
+  "classification_report": {
+    "0": {
+      "precision": 0.9232491856677525,
+      "recall": 0.9277823240589198,
+      "f1-score": 0.9255102040816326,
+      "support": 4888.0
+    },
+    "1": {
+      "precision": 0.8731226182470299,
+      "recall": 0.9227671167969675,
+      "f1-score": 0.8972586961529602,
+      "support": 4221.0
+    },
+    "2": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 152.0
+    },
+    "3": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 112.0
+    },
+    "accuracy": 0.8993918702656567,
+    "macro avg": {
+      "precision": 0.4490929509786956,
+      "recall": 0.46263736021397184,
+      "f1-score": 0.4556922250586482,
+      "support": 9373.0
+    },
+    "weighted avg": {
+      "precision": 0.874671139567341,
+      "recall": 0.8993918702656567,
+      "f1-score": 0.886719602476546,
+      "support": 9373.0
+    }
+  },
+  "checkpoint_dir": "D:\\Assignments & Projects\\NLP\\Project\\FastUrduGuard\\results\\rank_0\\checkpoints\\mbert"
+}

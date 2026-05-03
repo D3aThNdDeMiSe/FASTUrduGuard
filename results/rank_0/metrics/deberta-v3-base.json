@@ -1,0 +1,133 @@
+{
+  "model": "deberta-v3-base",
+  "hf_id": "microsoft/mdeberta-v3-base",
+  "rank": 0,
+  "placement": "gpu",
+  "device_used": "cuda",
+  "rows_train": 74976,
+  "rows_val": 9372,
+  "rows_test": 9373,
+  "val": {
+    "eval_loss": 0.3995479643344879,
+    "eval_accuracy": 0.8768672641912079,
+    "eval_macro_precision": 0.4378315509847782,
+    "eval_macro_recall": 0.45103127973083734,
+    "eval_macro_f1": 0.444248069781613,
+    "eval_weighted_f1": 0.8645521452391381,
+    "eval_runtime": 36.6277,
+    "eval_samples_per_second": 255.872,
+    "eval_steps_per_second": 7.999,
+    "epoch": 3.0
+  },
+  "test": {
+    "eval_loss": 0.3882576525211334,
+    "eval_accuracy": 0.8833884562039902,
+    "eval_macro_precision": 0.44103944727497296,
+    "eval_macro_recall": 0.4541734739714257,
+    "eval_macro_f1": 0.4474799350172311,
+    "eval_weighted_f1": 0.8709000070488003,
+    "eval_runtime": 35.5569,
+    "eval_samples_per_second": 263.605,
+    "eval_steps_per_second": 8.24,
+    "epoch": 3.0
+  },
+  "training_runtime_s": 4090.9122184000444,
+  "samples_per_sec": 54.992,
+  "peak_vram_mb": 4437,
+  "cpu_before": {
+    "cpu_pct": 14.6,
+    "ram_used_mb": 14346,
+    "ram_total_mb": 15676,
+    "n_cpus": 16
+  },
+  "cpu_after": {
+    "cpu_pct": 1.9,
+    "ram_used_mb": 13986,
+    "ram_total_mb": 15676,
+    "n_cpus": 16
+  },
+  "gpu_before": {
+    "available": true,
+    "name": "NVIDIA GeForce RTX 5060 Laptop GPU",
+    "total_mb": 8151,
+    "used_mb": 1165,
+    "free_mb": 6985,
+    "gpu_util_pct": 0,
+    "mem_util_pct": 0
+  },
+  "gpu_after": {
+    "available": true,
+    "name": "NVIDIA GeForce RTX 5060 Laptop GPU",
+    "total_mb": 8151,
+    "used_mb": 5584,
+    "free_mb": 2566,
+    "gpu_util_pct": 1,
+    "mem_util_pct": 0
+  },
+  "confusion_matrix": [
+    [
+      4483,
+      405,
+      0,
+      0
+    ],
+    [
+      424,
+      3797,
+      0,
+      0
+    ],
+    [
+      2,
+      150,
+      0,
+      0
+    ],
+    [
+      44,
+      68,
+      0,
+      0
+    ]
+  ],
+  "classification_report": {
+    "0": {
+      "precision": 0.9051080153442358,
+      "recall": 0.9171440261865794,
+      "f1-score": 0.9110862717203536,
+      "support": 4888.0
+    },
+    "1": {
+      "precision": 0.859049773755656,
+      "recall": 0.8995498696991234,
+      "f1-score": 0.8788334683485708,
+      "support": 4221.0
+    },
+    "2": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 152.0
+    },
+    "3": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 112.0
+    },
+    "accuracy": 0.8833884562039902,
+    "macro avg": {
+      "precision": 0.44103944727497296,
+      "recall": 0.4541734739714257,
+      "f1-score": 0.4474799350172311,
+      "support": 9373.0
+    },
+    "weighted avg": {
+      "precision": 0.8588730474794888,
+      "recall": 0.8833884562039902,
+      "f1-score": 0.8709000070488003,
+      "support": 9373.0
+    }
+  },
+  "checkpoint_dir": "D:\\Assignments & Projects\\NLP\\Project\\FastUrduGuard\\results\\rank_0\\checkpoints\\deberta-v3-base"
+}

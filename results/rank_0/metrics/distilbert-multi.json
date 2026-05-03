@@ -2,47 +2,47 @@
   "model": "distilbert-multi",
   "hf_id": "distilbert-base-multilingual-cased",
   "rank": 0,
-  "placement": "cpu",
-  "device_used": "cpu",
-  "rows_train": 400,
+  "placement": "gpu",
+  "device_used": "cuda",
+  "rows_train": 74976,
   "rows_val": 9372,
   "rows_test": 9373,
   "val": {
-    "eval_loss": 0.9724957942962646,
-    "eval_accuracy": 0.7039052496798975,
-    "eval_macro_precision": 0.35442058674186044,
-    "eval_macro_recall": 0.35830556455856627,
-    "eval_macro_f1": 0.35352213354947426,
-    "eval_weighted_f1": 0.6901429812450485,
-    "eval_runtime": 477.3888,
-    "eval_samples_per_second": 19.632,
-    "eval_steps_per_second": 1.228,
-    "epoch": 1.0
+    "eval_loss": 0.3889320492744446,
+    "eval_accuracy": 0.8762270593256509,
+    "eval_macro_precision": 0.43751850342473264,
+    "eval_macro_recall": 0.4505258509517285,
+    "eval_macro_f1": 0.4439016154021024,
+    "eval_weighted_f1": 0.8638182590629272,
+    "eval_runtime": 10.6551,
+    "eval_samples_per_second": 879.582,
+    "eval_steps_per_second": 27.499,
+    "epoch": 3.0
   },
   "test": {
-    "eval_loss": 0.9731214642524719,
-    "eval_accuracy": 0.70009602048437,
-    "eval_macro_precision": 0.35208344200000774,
-    "eval_macro_recall": 0.35639668299838195,
-    "eval_macro_f1": 0.3516691039341272,
-    "eval_weighted_f1": 0.6865823920193617,
-    "eval_runtime": 508.2896,
-    "eval_samples_per_second": 18.44,
-    "eval_steps_per_second": 1.153,
-    "epoch": 1.0
+    "eval_loss": 0.3759711980819702,
+    "eval_accuracy": 0.8807212205270458,
+    "eval_macro_precision": 0.4397304957084792,
+    "eval_macro_recall": 0.4529029144085511,
+    "eval_macro_f1": 0.4461726820546607,
+    "eval_weighted_f1": 0.8682938648251539,
+    "eval_runtime": 10.7854,
+    "eval_samples_per_second": 869.042,
+    "eval_steps_per_second": 27.166,
+    "epoch": 3.0
   },
-  "training_runtime_s": 686.0753821999533,
-  "samples_per_sec": 0.584,
-  "peak_vram_mb": 0,
+  "training_runtime_s": 1600.1509393999586,
+  "samples_per_sec": 140.673,
+  "peak_vram_mb": 1961,
   "cpu_before": {
-    "cpu_pct": 15.9,
-    "ram_used_mb": 12899,
+    "cpu_pct": 25.0,
+    "ram_used_mb": 14046,
     "ram_total_mb": 15676,
     "n_cpus": 16
   },
   "cpu_after": {
-    "cpu_pct": 34.4,
-    "ram_used_mb": 13215,
+    "cpu_pct": 10.2,
+    "ram_used_mb": 14042,
     "ram_total_mb": 15676,
     "n_cpus": 16
   },
@@ -50,57 +50,57 @@
     "available": true,
     "name": "NVIDIA GeForce RTX 5060 Laptop GPU",
     "total_mb": 8151,
-    "used_mb": 479,
-    "free_mb": 7671,
-    "gpu_util_pct": 48,
+    "used_mb": 4026,
+    "free_mb": 4124,
+    "gpu_util_pct": 8,
     "mem_util_pct": 2
   },
   "gpu_after": {
     "available": true,
     "name": "NVIDIA GeForce RTX 5060 Laptop GPU",
     "total_mb": 8151,
-    "used_mb": 501,
-    "free_mb": 7649,
+    "used_mb": 2824,
+    "free_mb": 5326,
     "gpu_util_pct": 7,
-    "mem_util_pct": 4
+    "mem_util_pct": 0
   },
   "confusion_matrix": [
     [
-      3991,
-      897,
+      4457,
+      431,
       0,
       0
     ],
     [
-      1650,
-      2571,
+      423,
+      3798,
       0,
       0
     ],
     [
-      77,
-      75,
+      9,
+      143,
       0,
       0
     ],
     [
-      90,
-      22,
+      45,
+      67,
       0,
       0
     ]
   ],
   "classification_report": {
     "0": {
-      "precision": 0.6871556473829201,
-      "recall": 0.8164893617021277,
-      "f1-score": 0.7462602842183994,
+      "precision": 0.9033238751520065,
+      "recall": 0.9118248772504092,
+      "f1-score": 0.9075544695581348,
       "support": 4888.0
     },
     "1": {
-      "precision": 0.7211781206171108,
-      "recall": 0.6090973702914001,
-      "f1-score": 0.6604161315181094,
+      "precision": 0.8555981076819104,
+      "recall": 0.8997867803837953,
+      "f1-score": 0.877136258660508,
       "support": 4221.0
     },
     "2": {
@@ -115,17 +115,17 @@
       "f1-score": 0.0,
       "support": 112.0
     },
-    "accuracy": 0.70009602048437,
+    "accuracy": 0.8807212205270458,
     "macro avg": {
-      "precision": 0.35208344200000774,
-      "recall": 0.35639668299838195,
-      "f1-score": 0.3516691039341272,
+      "precision": 0.4397304957084792,
+      "recall": 0.4529029144085511,
+      "f1-score": 0.4461726820546607,
       "support": 9373.0
     },
     "weighted avg": {
-      "precision": 0.6831227623527727,
-      "recall": 0.70009602048437,
-      "f1-score": 0.6865823920193617,
+      "precision": 0.8563882123405901,
+      "recall": 0.8807212205270458,
+      "f1-score": 0.8682938648251539,
       "support": 9373.0
     }
   },
