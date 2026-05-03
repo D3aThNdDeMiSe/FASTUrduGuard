@@ -19,7 +19,7 @@ def _run(cmd: list[str], cwd: Path | None = None) -> tuple[int, str]:
     try:
         out = subprocess.run(
             cmd, cwd=str(cwd),
-            capture_output=True, text=True, timeout=120,
+            capture_output=True, text=True, timeout=600,
         )
         return out.returncode, (out.stdout + out.stderr).strip()
     except Exception as e:

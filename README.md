@@ -72,7 +72,11 @@ $env:FUG_RANK="0"; python scripts/node_train.py --mode model_parallel
 #   Rank 1 (RTX 5060 Ti):
 $env:FUG_RANK="1"; python scripts/node_train.py --mode model_parallel
 
-# 3. each node pushes its artifacts back
+# 3. each node pushes metrics, plots, profile, and **full** `checkpoints/<model>/` trees
+#    (uses `git add -f` because weights are normally gitignored).
+#    Minimal push: `python scripts/push_artifacts.py --adapters-only`
+#    GitHub rejects single files > 100 MiB — use Git LFS or split hosts if a shard exceeds that.
+
 python scripts/push_artifacts.py
 
 # 4. once both ranks are present (CI does this automatically too):

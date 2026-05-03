@@ -13,7 +13,8 @@ venv/
 build/
 dist/
 
-# Heavy artifacts (each rank pushes only metrics + LoRA adapters)
+# Heavy checkpoint blobs (ignored so `git add .` stays safe). Full trees are
+# published intentionally via:  python scripts/push_artifacts.py  (uses git add -f).
 data/raw/
 results/rank_*/checkpoints/*/pytorch_model.bin
 results/rank_*/checkpoints/*/model.safetensors
