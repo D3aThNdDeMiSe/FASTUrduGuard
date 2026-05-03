@@ -9,14 +9,117 @@ from __future__ import annotations
 
 import argparse
 import io
+from dataclasses import dataclass
 from pathlib import Path
 
 import matplotlib.pyplot as plt
-from matplotlib.patches import FancyBboxPatch
+from matplotlib.patches import FancyArrowPatch, FancyBboxPatch, Rectangle
 from pptx import Presentation
 from pptx.util import Inches, Pt
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
+
+
+@dataclass(frozen=True)
+class _FlowBox:
+    x: float
+    y: float
+    w: float
+    h: float
+    text: str
+    face: str
+    edge: str = "#1e293b"
+    alpha: float = 0.55
+
+    def xc(self) -> float:
+        return self.x + self.w / 2
+
+    def yc(self) -> float:
+        return self.y + self.h / 2
+
+    def nn(self) -> tuple[float, float]:
+        return self.xc(), self.y + self.h
+
+    def ss(self) -> tuple[float, float]:
+        return self.xc(), self.y
+
+    def ee(self) -> tuple[float, float]:
+        return self.x + self.w, self.yc()
+
+    def ww(self) -> tuple[float, float]:
+        return self.x, self.yc()
+
+
+def _draw_flow_box(ax, box: _FlowBox) -> None:
+    ax.add_patch(
+        FancyBboxPatch(
+            (box.x, box.y),
+            box.w,
+            box.h,
+            boxstyle="round,pad=0.04",
+            linewidth=1.75,
+            edgecolor=box.edge,
+            facecolor=box.face,
+            alpha=box.alpha,
+            zorder=4,
+        )
+    )
+    ax.text(
+        box.xc(),
+        box.yc(),
+        box.text,
+        ha="center",
+        va="center",
+        fontsize=9.2,
+        color="#0f172a",
+        fontweight="600",
+        linespacing=1.14,
+        zorder=5,
+    )
+
+
+def _arrow(ax, p0: tuple[float, float], p1: tuple[float, float], **kw) -> None:
+    props = dict(
+        arrowstyle="-|>",
+        mutation_scale=15,
+        linewidth=2.0,
+        color="#1e3a5f",
+        shrinkA=3,
+        shrinkB=3,
+        zorder=3,
+    )
+    props.update(kw)
+    ax.add_patch(FancyArrowPatch(p0, p1, **props))
+
+
+def _wire_poly(ax, pts: list[tuple[float, float]], *, arrow_tail: bool = True) -> None:
+    """Polylines in screen space; arrowhead only on the last segment when arrow_tail."""
+    if len(pts) < 2:
+        return
+    if arrow_tail and len(pts) >= 2:
+        if len(pts) > 2:
+            for a, b in zip(pts[:-2], pts[1:-1]):
+                ax.plot(
+                    [a[0], b[0]],
+                    [a[1], b[1]],
+                    color="#1e3a5f",
+                    lw=2.0,
+                    solid_capstyle="round",
+                    solid_joinstyle="round",
+                    zorder=2,
+                )
+        _arrow(ax, pts[-2], pts[-1])
+    else:
+        for a, b in zip(pts[:-1], pts[1:]):
+            ax.plot(
+                [a[0], b[0]],
+                [a[1], b[1]],
+                color="#1e3a5f",
+                lw=2.0,
+                solid_capstyle="round",
+                solid_joinstyle="round",
+                zorder=2,
+            )
 
 
 def _placeholder_png(title: str, subtitle: str = "Replace before submission") -> io.BytesIO:
@@ -24,15 +127,15 @@ def _placeholder_png(title: str, subtitle: str = "Replace before submission") ->
     ax.set_xlim(0, 1)
     ax.set_ylim(0, 1)
     ax.axis("off")
-    fig.patch.set_facecolor("#eceff4")
+    fig.patch.set_facecolor("#f8fafc")
     ax.add_patch(
         FancyBboxPatch(
             (0.04, 0.08), 0.92, 0.84, boxstyle="round,pad=0.02",
-            linewidth=2.5, edgecolor="#5e81ac", facecolor="#e5e9f0", linestyle="--",
+            linewidth=2.0, edgecolor="#475569", facecolor="#f1f5f9", linestyle=(0, (5, 4)),
         )
     )
-    ax.text(0.5, 0.58, title, ha="center", va="center", fontsize=20, fontweight="bold", color="#2e3440")
-    ax.text(0.5, 0.38, subtitle, ha="center", va="center", fontsize=13, color="#4c566a")
+    ax.text(0.5, 0.58, title, ha="center", va="center", fontsize=19, fontweight="bold", color="#0f172a")
+    ax.text(0.5, 0.38, subtitle, ha="center", va="center", fontsize=13, color="#475569")
     buf = io.BytesIO()
     fig.savefig(buf, format="png", bbox_inches="tight", facecolor=fig.get_facecolor())
     plt.close(fig)
@@ -41,43 +144,72 @@ def _placeholder_png(title: str, subtitle: str = "Replace before submission") ->
 
 
 def _workflow_png() -> io.BytesIO:
-    """Simple workflow diagram (not performance metrics)."""
-    fig, ax = plt.subplots(figsize=(10.0, 4.2), dpi=120)
-    ax.set_xlim(0, 10)
-    ax.set_ylim(0, 4)
+    """System workflow: data pipeline → two ranks → Git → ensemble (schematic)."""
+    fig_w, fig_h = 12.9, 6.1
+    fig, ax = plt.subplots(figsize=(fig_w, fig_h), dpi=130)
+    ax.set_xlim(0, 13.05)
+    ax.set_ylim(0, 6.52)
     ax.axis("off")
-    fig.patch.set_facecolor("white")
+    fig.patch.set_facecolor("#fafafa")
 
-    boxes = [
-        (0.3, 2.1, 1.4, 0.9, "Raw corpora\n(3 sources)"),
-        (2.1, 2.1, 1.4, 0.9, "unify +\ndedup + split"),
-        (3.9, 2.1, 1.4, 0.9, "relabel\n(4 classes)"),
-        (5.7, 2.1, 1.4, 0.9, "preprocess\n(Roman Urdu)"),
-        (2.4, 0.5, 1.5, 0.85, "Rank 0\n(models A–C)"),
-        (4.4, 0.5, 1.5, 0.85, "Rank 1\n(models D–F)"),
-        (6.4, 0.5, 1.55, 0.85, "GitHub /\naggregation"),
-        (8.05, 0.5, 1.55, 0.85, "Ensemble +\nexplain +\nbench"),
-    ]
-    for x, y, w, h, txt in boxes:
-        ax.add_patch(
-            FancyBboxPatch((x, y), w, h, boxstyle="round,pad=0.03", linewidth=1.8,
-                           edgecolor="#2e3440", facecolor="#88c0d0", alpha=0.35),
-        )
-        ax.text(x + w / 2, y + h / 2, txt, ha="center", va="center", fontsize=9.5,
-                color="#2e3440", fontweight="medium")
+    ax.add_patch(Rectangle((0.2, 3.45), 12.65, 2.93, facecolor="#ecfdf5",
+                           edgecolor="none", zorder=0, alpha=0.88))
+    ax.add_patch(Rectangle((0.2, 0.45), 12.65, 2.82, facecolor="#eff6ff",
+                           edgecolor="none", zorder=0, alpha=0.9))
 
-    # arrows approx
-    for x0, x1, y in [(1.72, 2.08, 2.55), (3.52, 3.88, 2.55), (5.32, 5.68, 2.55)]:
-        ax.annotate("", xy=(x1, y), xytext=(x0, y),
-                    arrowprops=dict(arrowstyle="->", color="#3b4252", lw=2))
-    ax.plot([7.85, 7.85], [2.1, 2.95], color="#3b4252", lw=2)  # drop hint
-    ax.annotate("", xy=(8.95, 1.95), xytext=(7.35, 2.55),
-                arrowprops=dict(arrowstyle="->", color="#3b4252", lw=1.5))
-    ax.text(5.0, 3.55, "End-to-end workflow (placeholder layout — edit in PowerPoint if desired)",
-            ha="center", fontsize=11, fontweight="bold", color="#2e3440")
+    ax.text(0.35, 6.22, "Data & NLP preprocessing", fontsize=11, fontweight="bold", color="#14532d")
+    ax.text(0.35, 3.10, "PDC coordination", fontsize=11, fontweight="bold", color="#1e40af")
+
+    w, h, g, y_top = 2.38, 1.05, 0.26, 5.12
+    x0 = 0.54
+    raw = _FlowBox(x0 + 0 * (w + g), y_top, w, h,
+                   "Raw corpora\n(three public\nsources)", "#a7f3d0")
+    unify = _FlowBox(x0 + 1 * (w + g), y_top, w, h,
+                     "Unify +\ndeduplicate +\ntrain·val·test", "#a7f3d0")
+    relabel = _FlowBox(x0 + 2 * (w + g), y_top, w, h,
+                       "Four-class\nrelabel", "#a7f3d0")
+    preprocess = _FlowBox(x0 + 3 * (w + g), y_top, w, h,
+                          "Roman Urdu +\nparallel\npreprocess", "#86efac")
+
+    tops = [raw, unify, relabel, preprocess]
+
+    y_bot, h2, w2 = 1.16, 1.06, 2.42
+    r0 = _FlowBox(1.12, y_bot, w2, h2,
+                  "Rank 0\n(models A–C)", "#bfdbfe")
+    r1 = _FlowBox(3.94, y_bot, w2, h2,
+                  "Rank 1\n(models D–F)", "#bfdbfe")
+    git_hub = _FlowBox(7.02, y_bot, 2.72, h2,
+                       "Git + metrics +\naggregation", "#93c5fd")
+    ens = _FlowBox(10.38, y_bot, w2, h2,
+                   "Weighted\nensemble + explain +\nbenchmark", "#7dd3fc")
+
+    for b in [*tops, r0, r1, git_hub, ens]:
+        _draw_flow_box(ax, b)
+
+    for left, right in zip(tops, tops[1:]):
+        _arrow(ax, left.ee(), right.ww())
+
+    bus_y = 3.88
+    sx, sy = preprocess.ss()
+
+    _wire_poly(ax, [(sx, sy), (sx, bus_y), (r0.xc(), bus_y), r0.nn()])
+    _wire_poly(ax, [(sx, sy), (sx, bus_y), (r1.xc(), bus_y), r1.nn()])
+
+    _arrow(ax, r0.ee(), git_hub.ww())
+    _arrow(ax, r1.ee(), git_hub.ww())
+    _arrow(ax, git_hub.ee(), ens.ww())
+
+    ax.text(
+        6.52,
+        0.17,
+        "Directed edges indicate processing / coordination flow (schematic — not timed to scale).",
+        ha="center",
+        fontsize=9.15,
+        color="#64748b",
+    )
 
     buf = io.BytesIO()
-    fig.savefig(buf, format="png", bbox_inches="tight", facecolor="white")
+    fig.savefig(buf, format="png", bbox_inches="tight", facecolor="#fafafa", pad_inches=0.12)
     plt.close(fig)
     buf.seek(0)
     return buf
@@ -87,7 +219,7 @@ def _set_title(slide, text: str) -> None:
     slide.shapes.title.text = text
 
 
-def _body(slide) -> None:
+def _body(slide):
     return slide.placeholders[1]
 
 
@@ -104,12 +236,11 @@ def _add_bullets(slide, title: str, lines: list[str]) -> None:
 
 def build_deck() -> Presentation:
     prs = Presentation()
-    prs.slide_width = Inches(13.333)   # widescreen 16:9
+    prs.slide_width = Inches(13.333)
     prs.slide_height = Inches(7.5)
 
     blank = prs.slide_layouts[6]
 
-    # 1 — Title
     t = prs.slides.add_slide(prs.slide_layouts[0])
     t.shapes.title.text = "FastUrduGuard"
     st = t.placeholders[1]
@@ -122,7 +253,6 @@ def build_deck() -> Presentation:
     for p in st.text_frame.paragraphs:
         p.font.size = Pt(18)
 
-    # 2 — Problem
     s = prs.slides.add_slide(prs.slide_layouts[1])
     _add_bullets(
         s,
@@ -135,20 +265,18 @@ def build_deck() -> Presentation:
         ],
     )
 
-    # 3 — Literature / baseline
     s = prs.slides.add_slide(prs.slide_layouts[1])
     _add_bullets(
         s,
         "Literature review — baseline (Islam et al., 2025)",
         [
-            "Islam et al., “Unified LLMs for Misinformation Detection in Low-Resource Linguistic Settings,” arXiv:2506.01587, 2025.",
+            'Islam et al., "Unified LLMs for Misinformation Detection in Low-Resource Linguistic Settings," arXiv:2506.01587, 2025.',
             "Introduces Urdu-LLD and strong binary {real, fake} results with six transformer encoders (e.g., mBERT, XLM-R).",
             "Single-workstation, sequential training; limited discussion of Roman Urdu, multi-class labels, or explainability.",
             "We adopt the same encoder families as a scientific control, but extend the problem setting and systems story.",
         ],
     )
 
-    # 4 — Objectives
     s = prs.slides.add_slide(prs.slide_layouts[1])
     _add_bullets(
         s,
@@ -162,7 +290,6 @@ def build_deck() -> Presentation:
         ],
     )
 
-    # 5 — Proposed solution (text)
     s = prs.slides.add_slide(prs.slide_layouts[1])
     _add_bullets(
         s,
@@ -175,15 +302,13 @@ def build_deck() -> Presentation:
         ],
     )
 
-    # 6 — Workflow diagram
     slide = prs.slides.add_slide(blank)
-    slide.shapes.add_picture(_workflow_png(), Inches(0.45), Inches(1.05), width=Inches(12.35))
-    tx = slide.shapes.add_textbox(Inches(0.5), Inches(0.25), Inches(12.0), Inches(0.65))
-    tx.text_frame.text = "Workflow — data, training coordination, aggregation"
+    slide.shapes.add_picture(_workflow_png(), Inches(0.40), Inches(0.95), width=Inches(12.45))
+    tx = slide.shapes.add_textbox(Inches(0.5), Inches(0.20), Inches(12.0), Inches(0.65))
+    tx.text_frame.text = "End-to-end workflow"
     tx.text_frame.paragraphs[0].font.size = Pt(28)
     tx.text_frame.paragraphs[0].font.bold = True
 
-    # 7 — Methodology
     s = prs.slides.add_slide(prs.slide_layouts[1])
     _add_bullets(
         s,
@@ -208,7 +333,6 @@ def build_deck() -> Presentation:
         ],
     )
 
-    # 8 — Challenges
     s = prs.slides.add_slide(prs.slide_layouts[1])
     _add_bullets(
         s,
@@ -221,7 +345,6 @@ def build_deck() -> Presentation:
         ],
     )
 
-    # 9 — Comparison with baseline
     s = prs.slides.add_slide(prs.slide_layouts[1])
     _add_bullets(
         s,
@@ -234,19 +357,17 @@ def build_deck() -> Presentation:
         ],
     )
 
-    # 10–11 — Placeholder figures
     for title, ph, top in [
-        ("Results — model & ensemble performance (placeholder)", "Insert bar chart: accuracy / macro-F1 / per-class F1 from aggregate.py", Inches(1.15)),
-        ("Results — confusion matrix & error analysis (placeholder)", "Insert heatmap: test-set confusion matrix + optional calibration plot", Inches(1.15)),
+        ("Results — model & ensemble performance (placeholder)", "Insert bar chart: accuracy / macro-F1 / per-class F1 from aggregate.py", Inches(1.12)),
+        ("Results — confusion matrix & error analysis (placeholder)", "Insert heatmap: test-set confusion matrix + optional calibration plot", Inches(1.12)),
     ]:
         slide = prs.slides.add_slide(blank)
         slide.shapes.add_picture(_placeholder_png(ph), Inches(0.9), top, width=Inches(11.5))
-        tx = slide.shapes.add_textbox(Inches(0.5), Inches(0.25), Inches(12.0), Inches(0.7))
+        tx = slide.shapes.add_textbox(Inches(0.5), Inches(0.22), Inches(12.0), Inches(0.68))
         tx.text_frame.text = title
         tx.text_frame.paragraphs[0].font.size = Pt(26)
         tx.text_frame.paragraphs[0].font.bold = True
 
-    # 12 — Technical readiness / close
     s = prs.slides.add_slide(prs.slide_layouts[1])
     _add_bullets(
         s,
@@ -282,8 +403,15 @@ def main() -> None:
     for path in outs:
         path = path.resolve()
         path.parent.mkdir(parents=True, exist_ok=True)
-        prs.save(str(path))
-        print("Wrote", path)
+        try:
+            prs.save(str(path))
+            print("Wrote", path)
+        except PermissionError:
+            print(
+                "Skipped (file locked or open elsewhere):",
+                path,
+                "— close the deck in PowerPoint and re-run, or use --out.",
+            )
 
 
 if __name__ == "__main__":
