@@ -1,0 +1,105 @@
+# Six models from the Phase-2 mid-report. Each entry has:
+#   hf_id        - HuggingFace model id (multilingual variants where Urdu coverage matters)
+#   size_mb      - rough param footprint (used as a sort key for hybrid scheduling)
+#   placement    - "gpu" | "cpu" - which device this model prefers
+#   quant        - "nf4" | "fp16" | "fp32" - quantization level (nf4 requires bitsandbytes)
+#   peft         - "lora" | "full"
+#   lora_r       - LoRA rank
+#   lora_alpha   - LoRA alpha
+#   lora_dropout
+#   lora_target  - module name patterns that PEFT will adapt
+
+models:
+  - name: xlm-roberta-base
+    hf_id: xlm-roberta-base
+    size_mb: 1100
+    placement: gpu
+    quant: fp16
+    peft: lora
+    lora_r: 16
+    lora_alpha: 32
+    lora_dropout: 0.05
+    lora_target: ["query", "value"]
+
+  - name: deberta-v3-base
+    hf_id: microsoft/mdeberta-v3-base
+    size_mb: 1500
+    placement: gpu
+    quant: fp16
+    peft: lora
+    lora_r: 16
+    lora_alpha: 32
+    lora_dropout: 0.05
+    lora_target: ["query_proj", "value_proj"]
+
+  - name: mbert
+    hf_id: bert-base-multilingual-cased
+    size_mb: 700
+    placement: cpu
+    quant: fp32
+    peft: full
+    lora_r: 8
+    lora_alpha: 16
+    lora_dropout: 0.1
+    lora_target: ["query", "value"]
+
+  - name: distilbert-multi
+    hf_id: distilbert-base-multilingual-cased
+    size_mb: 500
+    placement: cpu
+    quant: fp32
+    peft: full
+    lora_r: 8
+    lora_alpha: 16
+    lora_dropout: 0.1
+    lora_target: ["q_lin", "v_lin"]
+
+  - name: xlnet-base
+    hf_id: xlnet-base-cased
+    size_mb: 700
+    placement: cpu
+    quant: fp32
+    peft: full
+    lora_r: 8
+    lora_alpha: 16
+    lora_dropout: 0.1
+    lora_target: ["q", "v"]
+
+  - name: roberta-base
+    hf_id: roberta-base
+    size_mb: 800
+    placement: cpu
+    quant: fp32
+    peft: full
+    lora_r: 8
+    lora_alpha: 16
+    lora_dropout: 0.1
+    lora_target: ["query", "value"]
+
+# Default training hyperparameters (overridable by configs/training.yaml or CLI)
+training:
+  epochs: 3
+  per_device_train_batch_size: 8
+  per_device_eval_batch_size: 16
+  gradient_accumulation_steps: 2
+  learning_rate: 2.0e-5
+  weight_decay: 0.01
+  warmup_ratio: 0.1
+  max_seq_len: 256             # 256 fits comfortably on 8 GB; bump to 512 if VRAM allows
+  num_labels_4class: 4
+  num_labels_2class: 2
+  evaluation_strategy: "epoch"
+  save_strategy: "epoch"
+  save_total_limit: 1
+  fp16: true
+  bf16: false
+  early_stopping_patience: 2
+  logging_steps: 25
+  seed: 42
+
+# Class names for 4-class
+classes_4:
+  0: "Real"
+  1: "Fake"
+  2: "PartiallyFalse"
+  3: "Satire"

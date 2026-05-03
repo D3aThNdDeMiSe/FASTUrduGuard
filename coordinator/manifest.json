@@ -1,0 +1,29 @@
+{
+  "world_size": 2,
+  "mode_a": {
+    "type": "model_parallel",
+    "assignments": {
+      "0": [
+        "deberta-v3-base",
+        "mbert",
+        "distilbert-multi"
+      ],
+      "1": [
+        "xlm-roberta-base",
+        "roberta-base",
+        "xlnet-base"
+      ]
+    },
+    "estimated_load_mb": [
+      2700,
+      2600
+    ]
+  },
+  "mode_b": {
+    "type": "fedavg",
+    "model": "xlm-roberta-base",
+    "rounds": 5,
+    "local_epochs_per_round": 1,
+    "shard_file": "data/processed/shards/rank_{rank}.parquet"
+  }
+}

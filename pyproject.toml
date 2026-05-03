@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fasturduguard"
+version = "0.3.0"
+description = "FastUrduGuard: parallel + explainable Urdu fake-news detection"
+requires-python = ">=3.10"
+authors = [
+    { name = "Sameer Asif", email = "i220493@nu.edu.pk" },
+    { name = "Immad Shah", email = "i220395@nu.edu.pk" },
+]
+readme = "README.md"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"fasturduguard" = ["py.typed"]

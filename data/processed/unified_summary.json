@@ -1,0 +1,29 @@
+{
+  "rows": 93721,
+  "by_source": {
+    "hook_and_bait": 69280,
+    "urdu_lld_notri": 13388,
+    "urdu_lld_ax_to_grind": 9232,
+    "urdu_lld_labeled_news": 1058,
+    "bend_the_truth": 763
+  },
+  "by_split": {
+    "train": 74976,
+    "test": 9373,
+    "val": 9372
+  },
+  "by_label_2": {
+    "0": 49382,
+    "1": 44339
+  },
+  "domains": {
+    "general": 79570,
+    "sports": 6859,
+    "entertainment": 3811,
+    "business & economics": 2834,
+    "business": 297,
+    "technology": 182,
+    "health": 162,
+    "science & technology": 6
+  }
+}

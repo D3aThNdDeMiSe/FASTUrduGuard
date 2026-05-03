@@ -1,0 +1,57 @@
+# Where each dataset lives on disk after extracting the three GitHub zips.
+# The unify step accepts --raw <root> and resolves all paths below relative to it.
+roots:
+  urdu_lld:
+    folder: "Urdu-Large-language-dataset-main"
+    files:
+      ax_to_grind: "Ax-to-Grind-Urdu-Dataset.csv"
+      labeled_news: "Labeled_Urdu_News.xlsx"
+      notri: "Notri-Fact_Real_Unreal_Urdu_NEWS.xlsx"
+  bend_the_truth:
+    folder: "Datasets-for-Urdu-news-master"
+    train_root: "Urdu Fake News Dataset/1.Corpus/Train"
+    test_root:  "Urdu Fake News Dataset/1.Corpus/Test"
+  hook_and_bait:
+    folder: "Hook-and-Bait-Urdu-main"
+    files:
+      - "Fake News 12166.xlsx"
+      - "Fake News After 12166.xlsx"
+      - "Fake_News_After_31190.xlsx"
+      - "Final True News-11012.xlsx"
+      - "True_News_After_28478.xlsx"
+      - "True_News_after_11012.xlsx"
+
+# Train / val / test split for the unified corpus
+split:
+  test_frac: 0.10
+  val_frac:  0.10
+  stratify_on: "label_4"
+  seed: 42
+
+# Per-rank shard policy (Mode B: data-parallel)
+shards:
+  num_ranks: 2
+  strategy: "stratified_random"   # or "by_source", or "by_domain"
+  seed: 42
+
+# Re-annotation
+relabel:
+  mode: "rule"        # "rule" | "llm" | "rule+llm"
+  satire_keywords_ur:
+    - "طنز"
+    - "مزاحیہ"
+    - "مزاح"
+    - "تنقید"
+  satire_keywords_roman:
+    - "tanz"
+    - "satire"
+    - "spoof"
+    - "joke"
+  partial_keywords_ur:
+    - "جزوی"
+    - "نیم"
+    - "مبہم"
+    - "گمراہ کن"     # "misleading"
+  llm_model: "Qwen/Qwen2.5-1.5B-Instruct"
+  llm_sample_size: 2000
+  llm_confidence_threshold: 0.85
