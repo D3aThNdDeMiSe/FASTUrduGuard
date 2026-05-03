@@ -15,13 +15,15 @@ from sklearn.model_selection import train_test_split
 
 from fasturduguard.utils import data_dir, load_yaml, set_seed, setup_logging
 from fasturduguard.data import loaders
+from fasturduguard.preprocess.normalize import normalize_urdu
 
 
 log = logging.getLogger("fug.data.unify")
 
 
 def _hash_text(t: str) -> str:
-    return hashlib.md5(t.encode("utf-8", errors="replace")).hexdigest()
+    # Match training-time NFC folding (normalize_urdu) so corpus dedup ~equals tokenisation surface.
+    return hashlib.md5(normalize_urdu(t).encode("utf-8", errors="replace")).hexdigest()
 
 
 def build_unified(raw_root: Path) -> pd.DataFrame:

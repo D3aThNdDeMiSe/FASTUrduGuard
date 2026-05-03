@@ -43,6 +43,16 @@ from fasturduguard.train.profile import StopWatch, cpu_info, gpu_info, write_pro
 log = logging.getLogger("fug.train.trainer")
 
 
+def _cuda_bf16_supported() -> bool:
+    """True if AMP bf16 training is usable on this device."""
+    if not torch.cuda.is_available():
+        return False
+    try:
+        return bool(torch.cuda.is_bf16_supported())
+    except Exception:
+        return False
+
+
 # ---------------------------------------------------------------------------
 # Quantization / PEFT
 # ---------------------------------------------------------------------------
@@ -197,12 +207,26 @@ def train_one(
     quant_cfg = _maybe_quant_config(model_cfg.get("quant", "fp16"))
     config = AutoConfig.from_pretrained(hf_id, num_labels=n_labels)
 
+    # AMP / dtype: Trainer fp16 mode uses autocast + GradScaler and expects FP32 backbone
+    # weights; loading `.from_pretrained(..., torch_dtype=float16)` makes params FP16 and
+    # breaks `clip_grad_norm_` (`ValueError: Attempting to unscale FP16 gradients`).
+    # Prefer bf16 on capable GPUs — no GradScaler (cleaner), keeps weights in bf16-ready dtype.
+    # Do not combine bf16 Trainer mode with BitsAndBytes 4-bit loads (stay on fp16 for QLoRA stacks).
+    use_bf16_train = (
+        fp16 and device_str == "cuda" and quant_cfg is None and _cuda_bf16_supported()
+    )
+    use_fp16_train = fp16 and device_str == "cuda" and not use_bf16_train
+
     model_kwargs: dict[str, Any] = {"config": config}
     if quant_cfg is not None and device_str == "cuda":
         model_kwargs["quantization_config"] = quant_cfg
         model_kwargs["device_map"] = {"": 0}
-    elif fp16 and device_str == "cuda":
-        model_kwargs["torch_dtype"] = torch.float16
+    elif device_str == "cuda":
+        if use_bf16_train:
+            model_kwargs["torch_dtype"] = torch.bfloat16
+        else:
+            # fp32 for fp16 AMP, or fp32 fallback on CUDA without mixed precision flags
+            model_kwargs["torch_dtype"] = torch.float32
 
     model = AutoModelForSequenceClassification.from_pretrained(hf_id, **model_kwargs)
 
@@ -235,7 +259,8 @@ def train_one(
         greater_is_better=True,
         logging_steps=25,
         report_to=[],
-        fp16=fp16 and device_str == "cuda",
+        fp16=use_fp16_train,
+        bf16=use_bf16_train,
         seed=seed,
         dataloader_num_workers=0,        # process pool already runs in preprocess
         use_cpu=(device_str == "cpu"),
