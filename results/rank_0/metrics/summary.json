@@ -1,0 +1,9 @@
+[
+  {
+    "model": "distilbert-multi",
+    "macro_f1": 0.3516691039341272,
+    "accuracy": 0.70009602048437,
+    "training_runtime_s": 686.0753821999533,
+    "peak_vram_mb": 0
+  }
+]

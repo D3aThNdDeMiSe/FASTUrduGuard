@@ -1,0 +1,133 @@
+{
+  "model": "distilbert-multi",
+  "hf_id": "distilbert-base-multilingual-cased",
+  "rank": 0,
+  "placement": "cpu",
+  "device_used": "cpu",
+  "rows_train": 400,
+  "rows_val": 9372,
+  "rows_test": 9373,
+  "val": {
+    "eval_loss": 0.9724957942962646,
+    "eval_accuracy": 0.7039052496798975,
+    "eval_macro_precision": 0.35442058674186044,
+    "eval_macro_recall": 0.35830556455856627,
+    "eval_macro_f1": 0.35352213354947426,
+    "eval_weighted_f1": 0.6901429812450485,
+    "eval_runtime": 477.3888,
+    "eval_samples_per_second": 19.632,
+    "eval_steps_per_second": 1.228,
+    "epoch": 1.0
+  },
+  "test": {
+    "eval_loss": 0.9731214642524719,
+    "eval_accuracy": 0.70009602048437,
+    "eval_macro_precision": 0.35208344200000774,
+    "eval_macro_recall": 0.35639668299838195,
+    "eval_macro_f1": 0.3516691039341272,
+    "eval_weighted_f1": 0.6865823920193617,
+    "eval_runtime": 508.2896,
+    "eval_samples_per_second": 18.44,
+    "eval_steps_per_second": 1.153,
+    "epoch": 1.0
+  },
+  "training_runtime_s": 686.0753821999533,
+  "samples_per_sec": 0.584,
+  "peak_vram_mb": 0,
+  "cpu_before": {
+    "cpu_pct": 15.9,
+    "ram_used_mb": 12899,
+    "ram_total_mb": 15676,
+    "n_cpus": 16
+  },
+  "cpu_after": {
+    "cpu_pct": 34.4,
+    "ram_used_mb": 13215,
+    "ram_total_mb": 15676,
+    "n_cpus": 16
+  },
+  "gpu_before": {
+    "available": true,
+    "name": "NVIDIA GeForce RTX 5060 Laptop GPU",
+    "total_mb": 8151,
+    "used_mb": 479,
+    "free_mb": 7671,
+    "gpu_util_pct": 48,
+    "mem_util_pct": 2
+  },
+  "gpu_after": {
+    "available": true,
+    "name": "NVIDIA GeForce RTX 5060 Laptop GPU",
+    "total_mb": 8151,
+    "used_mb": 501,
+    "free_mb": 7649,
+    "gpu_util_pct": 7,
+    "mem_util_pct": 4
+  },
+  "confusion_matrix": [
+    [
+      3991,
+      897,
+      0,
+      0
+    ],
+    [
+      1650,
+      2571,
+      0,
+      0
+    ],
+    [
+      77,
+      75,
+      0,
+      0
+    ],
+    [
+      90,
+      22,
+      0,
+      0
+    ]
+  ],
+  "classification_report": {
+    "0": {
+      "precision": 0.6871556473829201,
+      "recall": 0.8164893617021277,
+      "f1-score": 0.7462602842183994,
+      "support": 4888.0
+    },
+    "1": {
+      "precision": 0.7211781206171108,
+      "recall": 0.6090973702914001,
+      "f1-score": 0.6604161315181094,
+      "support": 4221.0
+    },
+    "2": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 152.0
+    },
+    "3": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 112.0
+    },
+    "accuracy": 0.70009602048437,
+    "macro avg": {
+      "precision": 0.35208344200000774,
+      "recall": 0.35639668299838195,
+      "f1-score": 0.3516691039341272,
+      "support": 9373.0
+    },
+    "weighted avg": {
+      "precision": 0.6831227623527727,
+      "recall": 0.70009602048437,
+      "f1-score": 0.6865823920193617,
+      "support": 9373.0
+    }
+  },
+  "checkpoint_dir": "D:\\Assignments & Projects\\NLP\\Project\\FastUrduGuard\\results\\rank_0\\checkpoints\\distilbert-multi"
+}

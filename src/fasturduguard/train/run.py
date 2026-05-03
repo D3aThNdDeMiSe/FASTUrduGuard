@@ -66,6 +66,11 @@ def main() -> None:
                    help="Optional cap on val/test rows for smoke runs.")
     p.add_argument("--only", default=None,
                    help="Train only this single model name (override manifest).")
+    p.add_argument("--placement_override", choices=("auto", "gpu", "cpu"), default="auto",
+                   help=("Force every assigned model onto GPU (sequential, fastest) "
+                         "or CPU (sequential, slowest). Default 'auto' obeys configs/models.yaml."))
+    p.add_argument("--cpu_concurrency", type=int, default=2,
+                   help="Max concurrent CPU trainers when placement is 'cpu'. Set 1 to disable intra-node CPU concurrency.")
     args = p.parse_args()
 
     rank = get_rank()
@@ -86,6 +91,10 @@ def main() -> None:
 
     cfg = load_yaml("models.yaml")
     by_name = {m["name"]: m for m in cfg["models"]}
+    if args.placement_override != "auto":
+        for m in by_name.values():
+            m["placement"] = args.placement_override
+        log.info("Placement override: every model -> %s", args.placement_override)
     tr_cfg = cfg["training"]
     set_seed(tr_cfg["seed"])
 
@@ -133,12 +142,13 @@ def main() -> None:
                                    "device_used": m.get("device_used")}
         return m
 
-    # CPU models: 1 thread each in parallel (capped to len). The HF Trainer releases GIL
-    # during forward/backward, so threads are an OK approximation of `multiprocessing` for
-    # this workload and don't risk import-storms on Windows.
+    # CPU models: bounded thread-pool. HF Trainer releases the GIL during forward/backward,
+    # so threads are an OK approximation of `multiprocessing` here and don't risk import-storms
+    # on Windows. Set --cpu_concurrency=1 to serialise (recommended on laptops).
     cpu_futures = []
     if cpu_models:
-        ex = ThreadPoolExecutor(max_workers=min(len(cpu_models), 2))
+        max_workers = max(1, min(args.cpu_concurrency, len(cpu_models)))
+        ex = ThreadPoolExecutor(max_workers=max_workers)
         cpu_futures = [ex.submit(_job, n) for n in cpu_models]
 
     for name in gpu_models:
