@@ -1,0 +1,133 @@
+{
+  "model": "xlnet-base",
+  "hf_id": "xlnet-base-cased",
+  "rank": 1,
+  "placement": "gpu",
+  "device_used": "cuda",
+  "rows_train": 74976,
+  "rows_val": 9372,
+  "rows_test": 9373,
+  "val": {
+    "eval_loss": 0.5594798922538757,
+    "eval_accuracy": 0.7745411865130175,
+    "eval_macro_precision": 0.3864922694501719,
+    "eval_macro_recall": 0.39774391337101944,
+    "eval_macro_f1": 0.3920365581348265,
+    "eval_weighted_f1": 0.7635072038226366,
+    "eval_runtime": 15.406,
+    "eval_samples_per_second": 608.333,
+    "eval_steps_per_second": 19.019,
+    "epoch": 3.0
+  },
+  "test": {
+    "eval_loss": 0.5514677166938782,
+    "eval_accuracy": 0.772218073188947,
+    "eval_macro_precision": 0.3853084164419579,
+    "eval_macro_recall": 0.39651540879113123,
+    "eval_macro_f1": 0.3908310788878847,
+    "eval_weighted_f1": 0.7612122700507417,
+    "eval_runtime": 15.4472,
+    "eval_samples_per_second": 606.777,
+    "eval_steps_per_second": 18.968,
+    "epoch": 3.0
+  },
+  "training_runtime_s": 2231.7237000000023,
+  "samples_per_sec": 100.805,
+  "peak_vram_mb": 4473,
+  "cpu_before": {
+    "cpu_pct": 17.1,
+    "ram_used_mb": 12373,
+    "ram_total_mb": 32690,
+    "n_cpus": 12
+  },
+  "cpu_after": {
+    "cpu_pct": 0.0,
+    "ram_used_mb": 13311,
+    "ram_total_mb": 32690,
+    "n_cpus": 12
+  },
+  "gpu_before": {
+    "available": true,
+    "name": "NVIDIA GeForce RTX 5060 Ti",
+    "total_mb": 16311,
+    "used_mb": 4839,
+    "free_mb": 11471,
+    "gpu_util_pct": 33,
+    "mem_util_pct": 9
+  },
+  "gpu_after": {
+    "available": true,
+    "name": "NVIDIA GeForce RTX 5060 Ti",
+    "total_mb": 16311,
+    "used_mb": 6936,
+    "free_mb": 9374,
+    "gpu_util_pct": 8,
+    "mem_util_pct": 0
+  },
+  "confusion_matrix": [
+    [
+      3981,
+      907,
+      0,
+      0
+    ],
+    [
+      964,
+      3257,
+      0,
+      0
+    ],
+    [
+      26,
+      126,
+      0,
+      0
+    ],
+    [
+      48,
+      64,
+      0,
+      0
+    ]
+  ],
+  "classification_report": {
+    "0": {
+      "precision": 0.7931858936043037,
+      "recall": 0.814443535188216,
+      "f1-score": 0.8036741697789442,
+      "support": 4888.0
+    },
+    "1": {
+      "precision": 0.7480477721635278,
+      "recall": 0.7716180999763089,
+      "f1-score": 0.7596501457725947,
+      "support": 4221.0
+    },
+    "2": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 152.0
+    },
+    "3": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 112.0
+    },
+    "accuracy": 0.772218073188947,
+    "macro avg": {
+      "precision": 0.3853084164419579,
+      "recall": 0.39651540879113123,
+      "f1-score": 0.3908310788878847,
+      "support": 9373.0
+    },
+    "weighted avg": {
+      "precision": 0.7505176884924877,
+      "recall": 0.772218073188947,
+      "f1-score": 0.7612122700507417,
+      "support": 9373.0
+    }
+  },
+  "checkpoint_dir": "C:\\Users\\PC\\nlp project\\FASTUrduGuard\\results\\rank_1\\checkpoints\\xlnet-base"
+}

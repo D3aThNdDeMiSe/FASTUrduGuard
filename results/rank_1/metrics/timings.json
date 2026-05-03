@@ -1,0 +1,19 @@
+{
+  "start": 1777816771.366687,
+  "models": {
+    "xlm-roberta-base": {
+      "elapsed_s": 1103.020922100004,
+      "device_used": "cuda"
+    },
+    "roberta-base": {
+      "elapsed_s": 1366.1062920999975,
+      "device_used": "cuda"
+    },
+    "xlnet-base": {
+      "elapsed_s": 2326.648348499999,
+      "device_used": "cuda"
+    }
+  },
+  "end": 1777821567.230305,
+  "wall_s": 4795.863617897034
+}

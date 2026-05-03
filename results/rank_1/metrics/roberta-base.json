@@ -1,0 +1,133 @@
+{
+  "model": "roberta-base",
+  "hf_id": "roberta-base",
+  "rank": 1,
+  "placement": "gpu",
+  "device_used": "cuda",
+  "rows_train": 74976,
+  "rows_val": 9372,
+  "rows_test": 9373,
+  "val": {
+    "eval_loss": 0.5404930710792542,
+    "eval_accuracy": 0.8021766965428937,
+    "eval_macro_precision": 0.4004985111564243,
+    "eval_macro_recall": 0.41253908312369525,
+    "eval_macro_f1": 0.40635749171739693,
+    "eval_weighted_f1": 0.7909238217500139,
+    "eval_runtime": 11.8939,
+    "eval_samples_per_second": 787.966,
+    "eval_steps_per_second": 24.634,
+    "epoch": 3.0
+  },
+  "test": {
+    "eval_loss": 0.5334826707839966,
+    "eval_accuracy": 0.8072122052704577,
+    "eval_macro_precision": 0.4029570579079334,
+    "eval_macro_recall": 0.4150369000023652,
+    "eval_macro_f1": 0.40885038593558853,
+    "eval_weighted_f1": 0.7958798058427624,
+    "eval_runtime": 11.9342,
+    "eval_samples_per_second": 785.392,
+    "eval_steps_per_second": 24.551,
+    "epoch": 3.0
+  },
+  "training_runtime_s": 1281.0939497,
+  "samples_per_sec": 175.64,
+  "peak_vram_mb": 2654,
+  "cpu_before": {
+    "cpu_pct": 0.0,
+    "ram_used_mb": 12617,
+    "ram_total_mb": 32690,
+    "n_cpus": 12
+  },
+  "cpu_after": {
+    "cpu_pct": 2.8,
+    "ram_used_mb": 12944,
+    "ram_total_mb": 32690,
+    "n_cpus": 12
+  },
+  "gpu_before": {
+    "available": true,
+    "name": "NVIDIA GeForce RTX 5060 Ti",
+    "total_mb": 16311,
+    "used_mb": 4421,
+    "free_mb": 11889,
+    "gpu_util_pct": 0,
+    "mem_util_pct": 0
+  },
+  "gpu_after": {
+    "available": true,
+    "name": "NVIDIA GeForce RTX 5060 Ti",
+    "total_mb": 16311,
+    "used_mb": 4839,
+    "free_mb": 11471,
+    "gpu_util_pct": 10,
+    "mem_util_pct": 1
+  },
+  "confusion_matrix": [
+    [
+      4093,
+      795,
+      0,
+      0
+    ],
+    [
+      748,
+      3473,
+      0,
+      0
+    ],
+    [
+      22,
+      130,
+      0,
+      0
+    ],
+    [
+      56,
+      56,
+      0,
+      0
+    ]
+  ],
+  "classification_report": {
+    "0": {
+      "precision": 0.8320796909941045,
+      "recall": 0.8373567921440261,
+      "f1-score": 0.8347099010910574,
+      "support": 4888.0
+    },
+    "1": {
+      "precision": 0.7797485406376291,
+      "recall": 0.8227908078654347,
+      "f1-score": 0.8006916426512968,
+      "support": 4221.0
+    },
+    "2": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 152.0
+    },
+    "3": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 112.0
+    },
+    "accuracy": 0.8072122052704577,
+    "macro avg": {
+      "precision": 0.4029570579079334,
+      "recall": 0.4150369000023652,
+      "f1-score": 0.40885038593558853,
+      "support": 9373.0
+    },
+    "weighted avg": {
+      "precision": 0.785076722459257,
+      "recall": 0.8072122052704577,
+      "f1-score": 0.7958798058427624,
+      "support": 9373.0
+    }
+  },
+  "checkpoint_dir": "C:\\Users\\PC\\nlp project\\FASTUrduGuard\\results\\rank_1\\checkpoints\\roberta-base"
+}
